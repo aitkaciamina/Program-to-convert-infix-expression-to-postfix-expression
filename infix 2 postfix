@@ -1,0 +1,146 @@
+//Write a program to convert given infix expression to postfix
+
+#include <iostream>
+using namespace std;
+
+class Stack
+{
+    private:
+    
+    int* arr ;
+    int top;
+    int capacity;
+    public:
+    
+    Stack(int s)
+    {
+        arr=new int [s];
+        this->capacity=s;
+        top=-1;
+    }
+    
+    bool is_full()
+    {
+        return (top==capacity-1);
+    }
+    
+    bool is_empty()
+    {
+        return (top==-1);
+    }
+    void push(int n)
+    {
+        if(is_full)
+        {
+            cout<<" overflow"<<endl;
+        }
+        else
+        {
+            cout<<" inserting "<<n<<endl;
+            arr[++top]=n;
+        }
+    }
+    int pop()
+    {
+        if(this->is_empty())
+        {
+            cout<<" cannot underflow !"
+        }
+        cout<<" removing : "<<peek();
+        return arr[--top];
+    }
+    int peek()
+    {
+        return arr[top];
+    }
+    
+}
+int is_char(char a)
+{
+    if (a=='*'|| a=='-' || a=='+' || a== '/' || a=='^')
+    return 1;
+    else
+    return 0;
+}
+
+int is_digit (char a)
+{
+    if (a<='9' && a>='0')
+    return 1;
+    else
+    return 0;
+}
+
+
+int precedence(char c)
+{
+    if (c=='+' || c=='-')
+    return 1;
+    if(c=='*' || c== '/')
+    return 2;
+    if(c=='^')
+    return 3;
+    return 0;
+    
+}
+
+
+bool is_precedent(char op1 , char op2)
+{
+    int p1=precedence(op1);
+    int p2=precedence(op2);
+    if(p1==p2)
+    {
+        if(op1=="^")
+        {
+            return false;
+        }
+        return true;
+    }
+    return (p1>p2?true:false);
+}
+
+string converter(string infix)
+{
+    Stack <char> S;  
+    string postfix ="";
+    char c;
+    S.push('(');
+    infix+=')';
+    for (int i=0 ; i<infix.length() ; i++)
+    {
+        c=infix[i];
+        if (c==' ')
+        continue;
+        else if (c=='(')
+        S.push(c);
+        else if (is_digit(c))
+        postfix +=c;
+        else if (is_char(c))
+        {
+            while(is_precedent(S.top,c))
+            {
+                postfix+=S.peek();
+                S.pop();
+            }
+            S.push(c);
+            
+        }
+        else if (c==')')
+        {
+            while(S.peek()!='(')
+            {  
+           postfix += S.peek();  
+            S.pop();  
+              }
+              S.pop();
+        }
+        
+    }
+    return postfix;  
+}
+int main ()
+{
+    
+    return 0;
+}
